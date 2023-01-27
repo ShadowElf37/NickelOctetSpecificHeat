@@ -131,7 +131,7 @@ A2 = 4/3 * J**2 * np.exp(-2*J/T) / (T**2 * (1/3 + np.exp(-2*J/T))**2)
 
 
 print(H2)
-print(H2 - np.matrix([[-1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,-1]]))
+print(H2 - 1.5*np.matrix([[-1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,-1]]))
 M2 = compute_C(H2 - np.matrix([[-1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,-1]]))
 
 import matplotlib.pyplot as plt
