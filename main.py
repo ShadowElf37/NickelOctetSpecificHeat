@@ -29,7 +29,7 @@ class SpinSpace:
         canonical_id = np.identity(2)
         canonical_plus = np.array([[0,1],[0,0]])
         canonical_minus = np.array([[0,0],[1,0]])
-        canonical_z = np.array([[1,0],[0,-1]]) * 0.5
+        canonical_z = np.array([[1,0],[0,-1]])*0.5
 
         for i, op in enumerate(self.plus):
             composition = [canonical_id.copy() for _ in range(n_particles)]
@@ -68,7 +68,7 @@ J = 1
 
 H2 = s2.makeH(0, 1)
 print('H=', H2)
-H4 = s4.makeH(0, 1) + s4.makeH(0, 2) + s4.makeH(2, 3) + s4.makeH(1, 3)
+H4 = (s4.makeH(0, 1) + s4.makeH(0, 2) + s4.makeH(2, 3) + s4.makeH(1, 3))
 H8 = s8.makeH(0, 1) + s8.makeH(0, 2) + s8.makeH(2, 3) + s8.makeH(1, 3) + s8.makeH(4, 5) + s8.makeH(4, 6) + s8.makeH(5, 7) + s8.makeH(6, 7) + s8.makeH(4, 0) + s8.makeH(5, 2) + s8.makeH(6, 3) + s8.makeH(7, 4)
 
 """print(s2.states)
@@ -119,37 +119,36 @@ def E_avg(energies, degeneracies, T):
 
 
 dx = 0.01
-T = np.arange(dx, 10, dx, dtype=np.float64)
+T = np.arange(dx, 5, dx, dtype=np.float64)
 
 decimal.getcontext().prec=200
 conv = lambda arr: np.asarray([decimal.Decimal(t) for t in arr], dtype=object)
 T = conv(T)
 
-def compute_C(H):
+def compute_C(H, n=1):
     E, g = get_Eg(H)
-    #print(E)
-    #print(g)
+    print(E)
+    print(g)
     #try:
     #    print(max(E))
     #    print(min(E))
     #except: pass
 
-    return np.gradient(np.array(list(map(float, E_avg(conv(E), conv(g), T)))), dx)
+    return np.gradient(np.array(list(map(float, E_avg(conv(E)/decimal.Decimal(n), conv(g), T)))), dx)
 
-"""print(H4)
+print(H4)
 e = list(map(round, np.linalg.eigvals(H4)))
 s = list(set(e))
 print(s, [e.count(i) for i in s])
-exit()"""
 
 print('CALCULATING H2...')
-C2 = compute_C(H2.copy())
+C2 = compute_C(H2,1)
 print('CALCULATING H4...')
-C4 = compute_C(H4.copy())
+C4 = compute_C(H4,2)
+#C4 = np.zeros_like(T, dtype=np.float64)
 print('CALCULATING H8...')
-C8 = compute_C(H8.copy())
-
-
+C8 = compute_C(H8,4)
+#C8 = np.zeros_like(T, dtype=np.float64)
 
 
 
@@ -162,7 +161,7 @@ T = np.array(list(map(float, T)))
 kbt = T*kb
 
 G2 = 4/3 * J**2 * np.exp(2*J/(kb*T)) / (kb* T**2 * (1/3 + np.exp(2*J/(kb*T)))**2)
-A2 = 2*J**2*exp(2*J/(kbt))*(25*exp(3*J/(kbt)) + 9*exp(5*J/(kbt)) + 2)/(T**2*kb*(exp(2*J/(kbt)) + 2*exp(5*J/(kbt)) + 1)**2)
+#THIS IS WRONG HAMILTONIAN: A2 = 2*J**2*exp(2*J/(kbt))*(25*exp(3*J/(kbt)) + 9*exp(5*J/(kbt)) + 2)/(T**2*kb*(exp(2*J/(kbt)) + 2*exp(5*J/(kbt)) + 1)**2)
 
 
 print("Saving to file.")
@@ -171,7 +170,9 @@ with open('data.npy', 'wb') as file:
     np.save(file, C2)
     np.save(file, C4)
     np.save(file, C8)
-    np.save(file, A2)
+    np.save(file, G2)
     np.save(file, T)
 
 print('Done.')
+
+import graph

@@ -3,8 +3,8 @@ import numpy as np
 
 
 with open('data.npy', 'rb') as f:
-    C2 = (np.load(f))
-    C4 = (np.load(f))
+    C2 = np.load(f)
+    C4 = np.load(f)
     C8 = np.load(f)
     A2 = np.load(f)
     T = np.load(f)
