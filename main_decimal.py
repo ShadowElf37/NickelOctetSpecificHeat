@@ -69,7 +69,7 @@ J = -1
 H2 = s2.makeH(0, 1)
 print('H=', H2)
 H4 = s4.makeH(0, 1) + s4.makeH(0, 2) + s4.makeH(2, 3) + s4.makeH(1, 3)
-H8 = s8.makeH(0, 1) + s8.makeH(0, 2) + s8.makeH(2, 3) + s8.makeH(1, 3) + s8.makeH(4, 5) + s8.makeH(4, 6) + s8.makeH(5, 7) + s8.makeH(6, 7) + s8.makeH(4, 0) + s8.makeH(5, 2) + s8.makeH(6, 3) + s8.makeH(7, 4)
+H8 = s8.makeH(0, 1) + s8.makeH(0, 2) + s8.makeH(2, 3) + s8.makeH(1, 3) + s8.makeH(4, 5) + s8.makeH(4, 6) + s8.makeH(5, 7) + s8.makeH(6, 7) + s8.makeH(4, 0) + s8.makeH(5, 1) + s8.makeH(6, 2) + s8.makeH(7, 3)
 
 
 """print(s2.states)
@@ -112,7 +112,10 @@ def E_avg(energies, degeneracies, T):
             total += g * E*np.exp(-E / (kb*T))
         except RuntimeWarning as e:
             print(e)
-
+        except decimal.Overflow as e:
+            print(e)
+            #print(-E / (kb*T))
+            raise KeyboardInterrupt
     return total / Z(energies, degeneracies, T)
 
 
@@ -120,10 +123,13 @@ def E_avg(energies, degeneracies, T):
 dx = 0.01
 T = np.arange(dx, 5, dx, dtype=np.float64)
 
+decimal.getcontext().prec=200
+conv = lambda arr: np.asarray([decimal.Decimal(t) for t in arr], dtype=object)
+T = conv(T)
 
-def compute_C(H):
+def compute_C(H, n=1):
     E, g = get_Eg(H)
-    return np.gradient(np.array(list(map(float, E_avg(E, g, T)))), dx)
+    return np.gradient(np.array(list(map(float, E_avg(conv(E)/decimal.Decimal(n), conv(g), T)))), dx)
 
 print(H4)
 e = list(map(np.round, np.linalg.eigvals(H4)))
@@ -131,12 +137,12 @@ s = list(set(e))
 print(s, [e.count(i) for i in s])
 
 print('CALCULATING H2...')
-C2 = compute_C(H2)/2
+C2 = compute_C(H2,1)/2
 print('CALCULATING H4...')
-C4 = compute_C(H4)/4
+C4 = compute_C(H4,1)/4
 #C4 = np.zeros_like(T, dtype=np.float64)
 print('CALCULATING H8...')
-C8 = compute_C(H8)/8
+C8 = compute_C(H8,1)/8
 #C8 = np.zeros_like(T, dtype=np.float64)
 
 
