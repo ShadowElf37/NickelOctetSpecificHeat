@@ -65,7 +65,7 @@ J = -1
 H2 = s2.makeH(0, 1)
 print('H=', H2)
 H4 = s4.makeH(0, 1) + s4.makeH(0, 2) + s4.makeH(2, 3) + s4.makeH(1, 3)
-H8 = s8.makeH(0, 1) + s8.makeH(0, 2) + s8.makeH(2, 3) + s8.makeH(1, 3) + s8.makeH(4, 5) + s8.makeH(4, 6) + s8.makeH(5, 7) + s8.makeH(6, 7) + s8.makeH(4, 0) + s8.makeH(5, 1) + s8.makeH(6, 2) + s8.makeH(7, 3)
+H8 = s8.makeH(0, 1) + s8.makeH(0, 2) + s8.makeH(2, 3) + s8.makeH(1, 3) + s8.makeH(4, 5) + s8.makeH(4, 6) + s8.makeH(6, 7) + s8.makeH(5, 7) + s8.makeH(4, 0) + s8.makeH(5, 1) + s8.makeH(6, 2) + s8.makeH(7, 3)
 
 
 """print(s2.states)

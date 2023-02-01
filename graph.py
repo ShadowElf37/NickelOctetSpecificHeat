@@ -23,7 +23,7 @@ plt.plot(T, A2, color="purple", label="Gregorio Dimer", linestyle="dotted", line
 
 plt.legend()
 
-plt.title('J=-1 Spin Systems')
+plt.title('J=-1 Specific Heat per Ion')
 
 plt.xlabel('Temperature')
 plt.ylabel('Specific Heat')
