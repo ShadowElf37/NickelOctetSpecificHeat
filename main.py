@@ -15,7 +15,7 @@ def check_symmetric(a, tol=1e-8):
 
 J = -1
 kb = 1
-mu = -1
+mu = -1/2
 
 #decimal.Decimal = lambda x: np.ndarray.astype(x, np.float64)
 
@@ -153,8 +153,8 @@ def E_avg(energies, degeneracies, T):
 
 
 
-dx = 0.005
-T = np.arange(dx, 5, dx, dtype=np.float64)
+dx = 0.01
+T = np.arange(dx, 10, dx, dtype=np.float64)
 #B = np.arange(dx, 5, dx, dtype=np.float64)
 
 
