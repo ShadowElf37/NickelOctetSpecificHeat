@@ -1,6 +1,5 @@
 import numpy as np
-import decimal
-from numpy import exp
+import pickle
 from scipy.linalg import expm
 
 def tensor(*ops):
@@ -15,7 +14,7 @@ def check_symmetric(a, tol=1e-8):
 
 J = -1
 kb = 1
-mu = -1/2
+mu = -1
 
 #decimal.Decimal = lambda x: np.ndarray.astype(x, np.float64)
 
@@ -99,6 +98,7 @@ H8 = s8.makeH(0, 1) + s8.makeH(0, 2) + s8.makeH(2, 3) + s8.makeH(1, 3) + s8.make
 #    + s16.makeH(8, 9) + s16.makeH(8, 10) + s16.makeH(10, 11) + s16.makeH(9, 11) + s16.makeH(12, 13) + s16.makeH(12, 14) + s16.makeH(13, 15) + s16.makeH(14, 15) + s16.makeH(12, 0) + s16.makeH(13, 9) + s16.makeH(14, 10) + s16.makeH(15, 11)\
  #   + s16.makeH(0, 8) + s16.makeH(1, 9) + s16.makeH(2, 10) + s16.makeH(3, 11) + s16.makeH(4, 12) + s16.makeH(5, 13) + s16.makeH(6, 14) + s16.makeH(7, 15)
 
+M1 = mu*np.array([[0.5,0],[0,-0.5]])
 M2 = s2.make_magnetization()
 M3 = s3.make_magnetization()
 M4 = s4.make_magnetization()
@@ -123,6 +123,8 @@ print(np.matmul(s2.plus[1], s2.states[2]))
 print(np.matmul(s2.plus[1], s2.states[3]))"""
 
 def get_Eg(H):
+    if H is 0: return (0,),(0,)
+
     energies_raw = np.linalg.eigvals(H).tolist()
     #print(np.linalg.eig(H))
     energies = []
@@ -144,11 +146,7 @@ def Z(energies, degeneracies, T):
 def E_avg(energies, degeneracies, T):
     total = 0
     for g, E in zip(degeneracies, energies):
-        try:
-            total += g * E*np.exp(-E / (kb*T))
-        except RuntimeWarning as e:
-            print(e)
-
+        total += g * E*np.exp(-E / (kb*T))
     return total / Z(energies, degeneracies, T)
 
 
@@ -166,11 +164,8 @@ def compute_C(H):
 def compute_chi(M, H):
     E, g = get_Eg(H)
     z = Z(E, g, T)
-    chi = np.zeros_like(T)
     MM = M * M
-    for i,t in enumerate(T*kb):
-        rho = expm(-H/t)/z[i]
-        chi[i] = np.trace(MM * rho)/t
+    chi = np.array([np.trace(MM * expm(-H/t)/z[i])/t for i,t in enumerate(T*kb)])
     return chi
 
 #print(H4)
@@ -188,33 +183,33 @@ C4 = compute_C(H4)/4
 print('Calculating H8...')
 C8 = compute_C(H8)/8
 #C8 = np.zeros_like(T, dtype=np.float64)
+X1 = mu**2/(kb*T)
 print('Calculating X2...')
-X2 = compute_chi(M2, H2)
+X2 = compute_chi(M2, H2)/2
 print('Calculating X3...')
-X3 = compute_chi(M3, H3)
+X3 = compute_chi(M3, H3)/3
 print('Calculating X4...')
-X4 = compute_chi(M4, H4)
+X4 = compute_chi(M4, H4)/4
 print('Calculating X8...')
-X8 = compute_chi(M8, H8)#np.zeros_like(X4)#
+X8 = compute_chi(M8, H8)/8#np.zeros_like(X4)#
 
 
 #print(H2)
 #print(np.matrix([[-0.5, 0, 0, 0], [0, 0.5, -1, 0], [0, -1, 0.5, 0], [0, 0, 0, -0.5]]))
 #M2 = compute_C(np.matrix([[-0.5, 0, 0, 0], [0, 0.5, -1, 0], [0, -1, 0.5, 0], [0, 0, 0, -0.5]]))
 
-kbt = T*kb
+#kbt = T*kb
 
-G2 =  0.5 * 4/3 * J**2 * np.exp(2*J/(kbt)) / (kb* T**2 * (1/3 + np.exp(2*J/(kbt)))**2)
+#G2 =  0.5 * 4/3 * J**2 * np.exp(2*J/(kbt)) / (kb* T**2 * (1/3 + np.exp(2*J/(kbt)))**2)
 #THIS IS WRONG HAMILTONIAN: A2 = 2*J**2*exp(2*J/(kbt))*(25*exp(3*J/(kbt)) + 9*exp(5*J/(kbt)) + 2)/(T**2*kb*(exp(2*J/(kbt)) + 2*exp(5*J/(kbt)) + 1)**2)
 
-XA2 = 8/(kbt * (3 + np.exp(J / kbt)))
+#XA2 = 8/(kbt * (3 + np.exp(J / kbt)))
 
 print("Saving to file.")
 
 with open('data.npy', 'wb') as file:
-    np.save(file, (C2, C3, C4, C8, G2, T), allow_pickle=True)
-    np.save(file, (X2,X3,X4,X8, XA2), allow_pickle=True)
+    pickle.dump((C2, C3, C4, C8, T,X1,X2,X3,X4,X8), file)
 
 print('Done.')
 
-import graph
+#import graph

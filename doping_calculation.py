@@ -1,7 +1,7 @@
 import multiprocessing as mp
 import pickle
 import numpy as np
-from doping import *
+from dopelib import *
 
 
 LENGTH = 100
