@@ -4,7 +4,7 @@ from collections import defaultdict
 diffs = tuple(map(np.array, ((1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1))))
 #print(diffs)
 
-def safe_add(p, dp):
+def index_add(p, dp):
     return tuple(np.array(p)+np.array(dp))
 def where(condition):
     points_bad = np.array(np.where(condition))
@@ -22,7 +22,7 @@ def analyze(w):
                 if any(np.greater(np.array(p)+np.array(dp), L-1)) or any(np.less(np.array(p)+np.array(dp), 0)):
                     continue
                 #print(safe_add(p, dp), w[safe_add(p, dp)])
-                current_count += w[safe_add(p, dp)]
+                current_count += w[index_add(p, dp)]
             counts[current_count] += 1
 
     return counts
@@ -34,12 +34,12 @@ def branch(w):
     for p in where(w == 1):
         #print(p)
         for dp in diffs:
-            shifted = safe_add(p, dp)
+            shifted = index_add(p, dp)
             #print(shifted)
             # bounds check
             if any(np.greater(np.array(p) + np.array(dp), L - 1)) or any(np.less(np.array(p) + np.array(dp), 0)):
                 continue
-            # already was a vertex there check
+            # BYPASSED TO INCLUDE LOOPS already was a vertex there check
             if w[shifted]:
                 continue
 
@@ -63,17 +63,13 @@ def iterate(base_structures, base_worlds, ntimes):
 
     total_structures, total_worlds = base_structures.copy(), base_worlds.copy()
     for world in base_worlds:
-        #print('Doing world')
-        branched = branch(world)
-        #print(branched, world)
         new_structures, new_worlds = iterate(*branch(world), ntimes-1)
-        #print('Branched!')
         total_structures += new_structures
         total_worlds += new_worlds
     return total_structures, total_worlds
 
 
-L = 3
+L = 50
 base_world = np.zeros((L, L, L), dtype=np.int8)
 base_world[L // 2, L // 2, L // 2] = 1
 base_structure = analyze(base_world)
@@ -82,6 +78,7 @@ base_structure = analyze(base_world)
 
 #print(branch(base_world))
 
-for s, w in zip(*iterate([base_structure], [base_world], 3)):
-    print(dict(s))
-    print(w.tolist())
+for i, (s, w) in enumerate(zip(*iterate([base_structure], [base_world], 6))):
+    print(sum(dict(s).values()))
+    #print(dict(s))
+    #print(w.tolist())
