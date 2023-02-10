@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     print('Saving...')
 
-    with open('doping_data.npy', 'wb') as f:
+    with open('doping_data', 'wb') as f:
         pickle.dump(results, f)
 
     print('Done!')

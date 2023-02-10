@@ -66,4 +66,4 @@ def count_polymer_pct(vertex_arr):
 
 if __name__=="__main__":
     import pickle as p
-    print(*p.load(open('doping_data.npy','rb')), sep='\n')
+    print(*p.load(open('doping_data', 'rb')), sep='\n')

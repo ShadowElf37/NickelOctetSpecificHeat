@@ -4,7 +4,7 @@ import pickle
 from collections import defaultdict
 
 
-with open('doping_data.npy', 'rb') as f:
+with open('doping_data', 'rb') as f:
     data = pickle.load(f)
 
 D = [list() for _ in range(7)]

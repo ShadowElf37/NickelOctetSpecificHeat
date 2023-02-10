@@ -5,10 +5,10 @@ from collections import defaultdict
 from matplotlib.animation import FuncAnimation
 import matplotlib.animation as animation
 
-with open('data.npy', 'rb') as f:
+with open('cvx_data', 'rb') as f:
     C2, C3, C4, C8, T, X1,X2,X3,X4,X8 = pickle.load(f)
 
-with open('doping_data.npy', 'rb') as f:
+with open('doping_data', 'rb') as f:
     data = pickle.load(f)
 
 
@@ -62,5 +62,3 @@ ani = FuncAnimation(fig, animate, frames=len(specific_heat), interval=50, repeat
 
 writervideo = animation.FFMpegWriter(fps=20)
 ani.save('doped_Cv_X.mp4', writer=writervideo)
-
-plt.show()
