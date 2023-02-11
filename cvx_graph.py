@@ -4,7 +4,7 @@ import pickle
 
 
 with open('cvx_data', 'rb') as f:
-    C2, C3, C4a,C4b,C4c, C8, T, X1,X2,X3,X4a,X4b,X4c,X8 = pickle.load(f)
+    C2, C3, C4, C8, T, X1,X2,X3,X4,X8 = pickle.load(f)
 
 
 fig, (ax1,ax2) = plt.subplots(1,2)
@@ -14,9 +14,7 @@ fig.set_size_inches(12, 5)
 
 ax1.plot(T, C2, label="Dimer", linewidth=1.5)
 ax1.plot(T, C3, label="Trimer", linewidth=1.5)
-ax1.plot(T, C4a, label="Tetramer (040)", linewidth=1.5)
-ax1.plot(T, C4b, label="Tetramer (220)", linewidth=1.5)
-ax1.plot(T, C4c, label="Tetramer (301)", linewidth=1.5)
+ax1.plot(T, C4, label="Tetramer", linewidth=1.5)
 ax1.plot(T, C8, label="Octamer", linewidth=1.5)
 #plt.plot(T, C16, color="red", label="Hexadecamer", linewidth=1.5)
 
@@ -36,9 +34,7 @@ ax1.legend()
 ax2.plot(T, X1, color='purple', label="Monomer", linewidth=1.5)
 ax2.plot(T, X2, label="Dimer", linewidth=1.5)
 ax2.plot(T, X3, label="Trimer", linewidth=1.5)
-ax2.plot(T, X4a, label="Tetramer (040)", linewidth=1.5)
-ax2.plot(T, X4b, label="Tetramer (220)", linewidth=1.5)
-ax2.plot(T, X4c, label="Tetramer (301)", linewidth=1.5)
+ax2.plot(T, X4, label="Tetramer", linewidth=1.5)
 ax2.plot(T, X8, label="Octamer", linewidth=1.5)
 #plt.plot(B, X2B, color="blue", label="B = 1", linewidth=1.5)
 #plt.plot(B, X2C, color="green", label="B = 2", linewidth=1.5)

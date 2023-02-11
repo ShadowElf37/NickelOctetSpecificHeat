@@ -15,10 +15,8 @@ s8 = SpinSpace(8)
 print('Generating Hamiltonians...')
 H = (
     s2.make_coupled_H((0, 1)),
-    s3.make_coupled_H((0, 1), (0, 2)),
+    s3.make_coupled_H((1,0), (0, 2)),
     s4.make_coupled_H((0, 1), (0, 2), (2, 3), (1, 3)),
-    s4.make_coupled_H((0, 1), (1, 2), (2, 3)),
-    s4.make_coupled_H((0, 1), (0, 2), (0, 3)),
     s8.make_coupled_H((0, 1), (0, 2), (2, 3), (1, 3), (4, 5), (4, 6), (6, 7), (5, 7), (4,0), (5,1), (6,2), (7,3)),
 )
 
@@ -26,8 +24,6 @@ print('Generating magnetizations...')
 M = (
     s2.make_magnetization(),
     s3.make_magnetization(),
-    s4.make_magnetization(),
-    s4.make_magnetization(),
     s4.make_magnetization(),
     s8.make_magnetization(),
 )
