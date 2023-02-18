@@ -1,3 +1,7 @@
+"""
+The big Cv/Xm graph up to Hexamers
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle

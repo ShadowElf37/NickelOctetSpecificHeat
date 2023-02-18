@@ -1,7 +1,17 @@
+"""
+Tools for creating doped samples
+"""
+
+
 import numpy as np
 from random import randint
 import random
 
+
+def shuffled_point_box(length):  # big array with a bunch of coordinates
+    to_hit = [(i, j, k) for i in range(length - 1) for j in range(length - 1) for k in range(length - 1)]
+    random.shuffle(to_hit)
+    return to_hit
 
 def make_bonds_array(dimx, dimy, dimz):
     bonds = np.ones((dimx, dimy, dimz, 6), np.int8)
@@ -35,11 +45,9 @@ def to_vertices(edges):
 
 def random_dope(arr, count, length, hit_unique=True):
     if hit_unique:
-        to_hit = [(i, j, k) for i in range(length - 1) for j in range(length - 1) for k in range(length - 1)]
-        random.shuffle(to_hit)
+        to_hit = shuffled_point_box(length)
         for _ in range(count):
-            x, y, z = to_hit.pop()
-            dope(arr, x,y,z)
+            dope(arr, *to_hit.pop())
     else:
         for _ in range(count):
             x, y, z = randint(0, length-1), randint(0, length-1), randint(0, length-1)
@@ -51,7 +59,7 @@ def produce_sample(length, doping_count):
     length = length
     bonds = make_bonds_array(length, length, length)
     random_dope(bonds, doping_count, length, hit_unique=True)
-    return to_vertices(bonds)
+    return bonds
 
 def count_polymers(vertex_arr):
     return list(zip(*np.unique(vertex_arr, return_counts=True)))

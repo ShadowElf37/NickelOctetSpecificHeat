@@ -1,3 +1,7 @@
+"""
+Import this to make numpy shut up about overflows
+"""
+
 import numpy as np
 
 WARNS = 0

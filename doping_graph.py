@@ -1,3 +1,7 @@
+"""
+Animated graph of the doped sample
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle

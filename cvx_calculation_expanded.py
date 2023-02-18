@@ -1,3 +1,8 @@
+"""
+Massively expanded Cv calculation up to all possible Hexamers
+"""
+
+
 import numpy as np
 import pickle
 from scipy.linalg import expm

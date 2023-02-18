@@ -1,5 +1,9 @@
+"""
+Test file
+"""
+
 import pickle
-from bond_calc import *
+from chainlib import *
 import numpy as np
 
 with open('structures', 'rb') as f:

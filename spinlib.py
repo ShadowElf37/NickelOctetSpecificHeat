@@ -1,3 +1,8 @@
+"""
+Tools to construct spin Hamiltonians and partition functions and stuff
+"""
+
+
 import numpy as np
 from scipy.linalg import expm
 

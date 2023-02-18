@@ -1,3 +1,7 @@
+"""
+A few classic Cv and Xm calculations
+"""
+
 import numpy as np
 import pickle
 from scipy.linalg import expm
