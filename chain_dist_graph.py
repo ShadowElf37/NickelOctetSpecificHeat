@@ -24,12 +24,12 @@ for i,sample in enumerate(data):
         by_ion_count[i][Chain.N_from_ss(k)] += v/total_chains[i]
 
 
-nice_structures = [sum([frac for structure,frac in by_structure[i].items() if Chain.N_from_ss(structure) >= 8 and Chain.N_from_ss(structure, 3) > Chain.N_from_ss(structure, 0, 3)]) for i in range(len(X))]
+#nice_structures = [sum([frac for structure,frac in by_structure[i].items() if Chain.N_from_ss(structure) >= 8 and Chain.N_from_ss(structure, 3) > Chain.N_from_ss(structure, 0, 3)]) for i in range(len(X))]
 
 fig, (ax1) = plt.subplots(1,1)
 
 
-ax1.plot(X, [by_ion_count[i][1] for i in range(len(X))], label="Monomers", linewidth=1.5)
+ax1.plot(X, [by_ion_count[i][1] for i in range(len(X))], label="Isolated", linewidth=1.5)
 ax1.plot(X, [by_ion_count[i][2] for i in range(len(X))], label="Dimers", linewidth=1.5)
 ax1.plot(X, [by_ion_count[i][3] for i in range(len(X))], label="Trimers", linewidth=1.5)
 ax1.plot(X, [by_ion_count[i][4] for i in range(len(X))], label="Tetramers", linewidth=1.5)
@@ -40,7 +40,7 @@ ax1.plot(X, [sum(by_ion_count[i][j] for j in range(8, 28)) for i in range(len(X)
 #ax1.plot(X, [by_ion_count[i][9] for i in range(len(X))], label="Nonamers", linewidth=1.5)
 #ax1.plot(X, [by_ion_count[i][10] for i in range(len(X))], label="Decamer+", linewidth=1.5)
 #ax1.plot(X, [by_ion_count[i][11] for i in range(len(X))], label="??+", linewidth=1.5)
-ax1.plot(X, nice_structures, label='Nice Octamers', color='red')
+#ax1.plot(X, nice_structures, label='Nice Octamers', color='red')
 
 
 

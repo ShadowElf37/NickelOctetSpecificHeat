@@ -92,8 +92,9 @@ if __name__ == "__main__":
         #totals = [sum(x.values()) for x in counts]
 
         spin_spaces = [spinlib.SpinSpace(i) for i in range(1, 11)]
-        dT = 0.01
-        T = np.arange(dT, 10, dT, dtype=np.float64)
+        dT = 0.001
+        Tc = np.arange(dT, 10, dT, dtype=np.float64)
+        Tx = np.arange(dT, 10, 0.05, dtype=np.float64)
 
         print('Generating %s Hamiltonians.' % len(examples))
         H = {}
@@ -110,25 +111,15 @@ if __name__ == "__main__":
         pool = mp.Pool(16)
 
         print('Calculating specific heat...')
-        C_raw = pool.starmap(pool_c, ((H,T,dT,s,i) for i,s in enumerate(H.keys())))
+        C_raw = pool.starmap(pool_c, ((H,Tc,dT,s,i) for i,s in enumerate(H.keys())))
 
-        with open('sample_cvx_data', 'rb') as file:
-            Tx, _, X = pickle.load(file)
-        with open('sample_cvx_data_1', 'wb') as file:
-            pickle.dump((T, Tx, dict(C_raw), X), file)
-        exit()
+        with open('sample_cv_data_2', 'wb') as file:
+            pickle.dump((Tc, dict(C_raw)), file)
 
         print('Calculating magnetic susceptibility...')
-        X_raw = pool.starmap(pool_x, ((M,H,T,s,i) for i,s in enumerate(H.keys())))
+        X_raw = pool.starmap(pool_x, ((M,H,Tx,s,i) for i,s in enumerate(H.keys())))
 
-        C = dict(C_raw)
-        X = dict(X_raw) # [mu ** 2 / (kb * T)] +
+        with open('sample_xm_data_2', 'wb') as file:
+            pickle.dump((Tx, dict(X_raw)), file)
 
-        with open('sample_cvx_data', 'wb') as file:
-            pickle.dump((T, C, X), file)
-
-        import matplotlib.pyplot as plt
-        plt.plot(T, C[0])
-        plt.plot(T, X[0])
-        plt.show()
 
