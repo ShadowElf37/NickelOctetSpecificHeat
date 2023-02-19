@@ -18,18 +18,18 @@ s8 = SpinSpace(8)
 
 print('Generating Hamiltonians...')
 H = (
-    s2.make_coupled_H((0, 1)),
-    s3.make_coupled_H((1,0), (0, 2)),
-    s4.make_coupled_H((0, 1), (0, 2), (2, 3), (1, 3)),
-    s8.make_coupled_H((0, 1), (0, 2), (2, 3), (1, 3), (4, 5), (4, 6), (6, 7), (5, 7), (4,0), (5,1), (6,2), (7,3)),
+    s2.make_hamiltonian((0, 1)),
+    s3.make_hamiltonian((1, 0), (0, 2)),
+    s4.make_hamiltonian((0, 1), (0, 2), (2, 3), (1, 3)),
+    s8.make_hamiltonian((0, 1), (0, 2), (2, 3), (1, 3), (4, 5), (4, 6), (6, 7), (5, 7), (4, 0), (5, 1), (6, 2), (7, 3)),
 )
 
 print('Generating magnetizations...')
 M = (
-    s2.make_magnetization(),
-    s3.make_magnetization(),
-    s4.make_magnetization(),
-    s8.make_magnetization(),
+    s2.make_magnetization()**2,
+    s3.make_magnetization()**2,
+    s4.make_magnetization()**2,
+    s8.make_magnetization()**2,
 )
 
 print('Hermitian check...')
@@ -42,7 +42,7 @@ print('All passed.')
 
 dt = 0.01
 T = np.arange(dt, 10, dt, dtype=np.float64)
-
+"""
 def compute_C(H):
     print(dim(H))
     E, g = get_Eg(H)
@@ -53,13 +53,15 @@ def compute_X(M, H):
     z = Z(E, g, T)
     MM = M * M
     chi = np.array([np.trace(MM * expm(-H/t)/z[i])/t for i,t in enumerate(T*kb)])
-    return chi
+    return chi"""
+
+from spinlib import compute_C, compute_X
 
 print('Calculating C...')
-C = [compute_C(H[i])/dim(H[i]) for i in range(len(H))]
+C = [compute_C(H[i], T, dt)/dim(H[i]) for i in range(len(H))]
 
 print('Calculating X...')
-X = [mu**2/(kb*T)] + [compute_X(M[i], H[i])/dim(H[i])*2 for i in range(len(H))]
+X = [mu**2/(kb*T)] + [compute_X(M[i], H[i], T)/dim(H[i])*2 for i in range(len(H))]
 
 
 print("Saving to file...")
@@ -73,7 +75,7 @@ print('Done.')
 print(nperrlog.WARNS, 'warnings were ignored.')
 
 
-
+import cvx_graph
 
 #print(H2)
 #print(np.matrix([[-0.5, 0, 0, 0], [0, 0.5, -1, 0], [0, -1, 0.5, 0], [0, 0, 0, -0.5]]))

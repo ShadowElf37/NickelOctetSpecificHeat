@@ -47,14 +47,20 @@ class Chain:
         self.structure = self.analyze()
 
     def __repr__(self):
-        return f'<{self.N}-Chain {self.structstr()}>'
+        return f'<{self.N}-Chain {self.structstr_clean()}>'
 
     def structstr(self):
+        return ".".join(map(str, self.structure.values()))
+    def structstr_clean(self):
         return "".join(map(str, self.structure.values()))
 
     #@property
     #def vertices(self):
     #    return set(flatten(self.edges))
+
+    @staticmethod
+    def N_from_ss(ss, cutoff_bottom=0, cutoff_top=None):
+        return sum(map(int, ss.split('.')[cutoff_bottom:cutoff_top]))
 
     @property
     def N(self):

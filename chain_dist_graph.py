@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 from collections import defaultdict
+from chainlib import Chain
 
 
 with open('real_structures', 'rb') as f:
@@ -20,10 +21,10 @@ by_structure = [{k: v/total_chains[i] for (k,v) in (sample.items())} for (i,samp
 by_ion_count = [defaultdict(int) for sample in data]
 for i,sample in enumerate(data):
     for k,v in sample.items():
-        by_ion_count[i][sum(map(int, k))] += v/total_chains[i]
+        by_ion_count[i][Chain.N_from_ss(k)] += v/total_chains[i]
 
 
-nice_structures = [sum([frac for structure,frac in by_structure[i].items() if sum(map(int, structure)) >= 8 and sum(map(int, structure[3:])) > sum(map(int, structure[:3]))]) for i in range(len(X))]
+nice_structures = [sum([frac for structure,frac in by_structure[i].items() if Chain.N_from_ss(structure) >= 8 and Chain.N_from_ss(structure, 3) > Chain.N_from_ss(structure, 0, 3)]) for i in range(len(X))]
 
 fig, (ax1) = plt.subplots(1,1)
 

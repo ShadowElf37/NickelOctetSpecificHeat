@@ -1,10 +1,15 @@
 """
 Tools to construct spin Hamiltonians and partition functions and stuff
+
+Xm computation from https://bingweb.binghamton.edu/~suzuki/ThermoStatFIles/15.5%20%20%20QM%20Magnetization%20susceptibility.pdf
 """
 
 
 import numpy as np
-from scipy.linalg import expm
+import scipy.linalg
+from scipy.linalg import expm, fractional_matrix_power
+import time
+from itertools import starmap
 
 J = -1
 kb = 1
@@ -12,8 +17,9 @@ mu = -1
 
 def tensor(*ops):
     total = ops[0]
-    for op in ops[1:]:
-        total = np.kron(total, op)
+    if len(ops) > 1:
+        for op in ops[1:]:
+            total = np.kron(total, op)
     return total
 
 def check_symmetric(a, tol=1e-8):
@@ -32,7 +38,9 @@ class SpinSpace:
         n = 2**n_particles
         self.n = n_particles
 
-        self.zero = np.zeros(n)
+        self.zero = np.zeros((n,n))
+        self.identity = np.identity(n)
+
         self.states = np.array([np.zeros(n) for _ in range(n)])
         for i, state in enumerate(self.states):
             state[i] = 1
@@ -71,19 +79,17 @@ class SpinSpace:
         self.x = (self.plus + self.minus) * 0.5
         self.y = (self.plus - self.minus) * 0.5
 
-    def makeH(self, i, j):
+    def __makeH(self, i, j):
         return -2 * J * (0.5 * (np.matmul(self.plus[i], self.minus[j]) + np.matmul(self.minus[i], self.plus[j])) + np.matmul(self.z[i], self.z[j]))
 
-    def make_coupled_H(self, *pairs):
-        return sum([self.makeH(*pair) for pair in pairs])
+    def make_hamiltonian(self, *pairs):
+        return sum(self.__makeH(*pair) for pair in pairs) + self.zero
 
     def make_magnetization(self):
         return sum(self.z)*mu
 
 
 def get_Eg(H):
-    if H is 0: return (0,),(0,)
-
     energies_raw = np.linalg.eigvals(H).tolist()
     #print(np.linalg.eig(H))
     energies = []
@@ -109,3 +115,36 @@ def E_avg(energies, degeneracies, T):
     return total / Z(energies, degeneracies, T)
 
 
+def compute_C(H, T, dT):
+    #print(dim(H))
+    E, g = get_Eg(H)
+    return np.gradient(E_avg(E, g, T), dT)
+def compute_X(MM, H, T):
+    #print(dim(H))
+    E, g = get_Eg(H)
+    z = Z(E, g, T)
+    kbt = T*kb
+    N = len(T)
+
+
+    #t0 = time.time()
+    #th = -np.tile(H, (N, 1, 1)) / kbt[:,None,None]
+    #np.tile(MM, (N, 1, 1))
+    #th = np.tile(expm(-H), (N, 1, 1))
+    #t4 = time.time()
+    #rho = np.array(list(starmap(fractional_matrix_power, zip(th, (1/kbt)))))
+    #t5 = time.time()
+    #chi = np.array(list(map(lambda m: np.trace(np.matmul(MM, m)), rho))) / (z * kbt)
+    #chi = np.array(list(map(np.trace, np.tile(MM, (N, 1, 1)) * np.array(list(map(lambda m: expm(m) ** (1 / kbt[:,None,None]), np.tile(-H, (N,1,1)))))))) / (z * kbt)
+
+    #he = np.linalg.eigvalsh(-H)
+
+    #chi = np.array([(np.dot(np.diagonal(MM), np.diagonal(np.exp(-H/t))))/(z[i]*t) for i,t in enumerate(T*kb)])
+
+
+    #print(MM)
+
+    #t1 = time.time()
+    chi = np.array([np.trace(np.matmul(MM, expm(-H/t)))/(z[i]*t) for i,t in enumerate(T*kb)])
+    #print(t1-t0, time.time()-t1, t5-t4, sep='/')
+    return chi
