@@ -27,8 +27,8 @@ def pool_x(M, H, T, s, i):
     return s,spinlib.compute_X(M[s], H[s], T) / N(s) * 2
 
 if __name__ == "__main__":
-    BREAK_UP_CHAINS = False
-    CALC_HAMILTONIANS = True
+    BREAK_UP_CHAINS = True
+    CALC_HAMILTONIANS = False
 
     if BREAK_UP_CHAINS:
         with open('real_structures', 'rb') as f:
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         #print(examples)
 
         #total_chains = [sum(sample.values()) for sample in counts]
-        large_chains = [chain for chain in examples.values() if chain.N > 10]
+        large_chains = [chain for chain in examples.values() if chain and chain.N > 10]
         large_structures = [c.structstr() for c in large_chains]
 
         decomposed = defaultdict(list)

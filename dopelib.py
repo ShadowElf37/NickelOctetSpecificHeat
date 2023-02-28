@@ -39,7 +39,7 @@ def dope(arr, x,y,z):
 def to_vertices(edges):
     vertices = np.zeros(edges.shape[:3], dtype=np.int8)
     for p, val in np.ndenumerate(edges):
-        vertices[p[:3]] += val
+        vertices[p[:3]] += int(not val)
     return vertices
 
 

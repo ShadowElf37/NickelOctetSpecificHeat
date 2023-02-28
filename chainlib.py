@@ -60,6 +60,8 @@ class Chain:
 
     @staticmethod
     def N_from_ss(ss, cutoff_bottom=0, cutoff_top=None):
+        if ss == None:
+            return 0
         return sum(map(int, ss.split('.')[cutoff_bottom:cutoff_top]))
 
     @property

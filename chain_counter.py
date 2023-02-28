@@ -21,9 +21,9 @@ def manhattan_within_radius(p1, p2, radius):
 
 def branch(sample, point): # return all vertices that the point is bonded to
     new_vertices = []
-    for (edge_index,) in chainlib.where(sample[point] == 1): # 1 marks a bond, so this gets all the bond indices
+    for (edge_index,) in chainlib.where(sample[point] == 0): # 1 marks a bond, so this gets all the bond indices
         shifted_point = chainlib.index_add(point, chainlib.Chain.SHIFTS[edge_index]) # shift to get the next vertex
-        if all(sample.shape[0] > i > -1 for i in shifted_point): # check it's in the sample's bounds so we dont get index errors or looping around
+        if all(sample.shape[0] > i > -1 for i in shifted_point) and not any(sample[shifted_point]): # check it's in the sample's bounds so we dont get index errors or looping around
             new_vertices.append(shifted_point)
     return new_vertices
 
@@ -32,6 +32,11 @@ def branch(sample, point): # return all vertices that the point is bonded to
 def probe_point(sample, origin, n=3, vertex_limit=27, octamer_if_limit_reached_at_n=3, radius_limit=1):
     chain = chainlib.Chain(default_base_point=origin)
     points = [origin]
+
+    #print(sample[origin])
+
+    if any(sample[origin]):
+        return None
 
     for i in range(n):
         new_points = []
@@ -69,7 +74,7 @@ def analyze_sample(sample, sample_i=None, npoints=1000000//27):
     examples = {}
     for _ in range(len(to_hit)):
         new_chain = probe_point(sample, to_hit.pop())
-        ss = new_chain.structstr()
+        ss = '0' if new_chain is None else new_chain.structstr()
         structure_counts[ss] += 1
         if ss not in examples.keys():
             examples[ss] = new_chain
