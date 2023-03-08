@@ -50,8 +50,8 @@ def probe_point(sample, origin, n=3, vertex_limit=27, octamer_if_limit_reached_a
                 if not chain.e_exists(p, new_p) and chain.bond(p, new_p, update_structure=False):
                     new_points.append(new_p)
                 if chain.N >= vertex_limit:
-                    if i <= octamer_if_limit_reached_at_n: # if it's growing really fast its prob octamer
-                        chain.force_octamer = True
+                    #if i <= octamer_if_limit_reached_at_n: # if it's growing really fast its prob octamer
+                    #    chain.force_octamer = True
                     STOP = True
                     break
             if STOP:
@@ -76,9 +76,9 @@ def analyze_sample(sample, sample_i=None, npoints=1000000//27):
         new_chain = probe_point(sample, to_hit.pop())
         ss = '0' if new_chain is None else new_chain.structstr()
         structure_counts[ss] += 1
-        if ss not in examples.keys():
-            examples[ss] = new_chain
-    return structure_counts, examples
+        #if ss not in examples.keys():
+        #    examples[ss] = new_chain
+    return structure_counts#, examples
 
 #print(analyze_sample(test))
 
@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     structures = pool.starmap(analyze_sample, zip(samples, range(len(samples))))
 
-    with open('real_structures', 'wb') as f:
+    with open('real_structures0', 'wb') as f:
         pickle.dump(structures, f)
 
     print('Done!')

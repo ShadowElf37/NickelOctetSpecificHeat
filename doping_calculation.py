@@ -17,9 +17,9 @@ def produce_sampleL(cnt):
     raw_sample = produce_sample(LENGTH, cnt)
     return raw_sample
 
-    sample = to_vertices(raw_sample)
+    #sample = to_vertices(raw_sample)
     #if cnt == COUNTS[-1]:print(sample)
-    return cnt, count_polymer_pct(sample)
+    #return cnt, count_polymer_pct(sample)
 
 if __name__ == '__main__':
     import time
