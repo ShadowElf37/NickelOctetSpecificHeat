@@ -53,7 +53,7 @@ data = [gaussian_filter1d([(by_ion_count[i][j]) for i in range(len(X))], sigma=0
 
 #ax1.plot(X, [by_ion_count[i][0] for i in range(len(X))], label="Still Conducting", linewidth=1.5)
 ax1.set_xlim([0,0.3])
-ax1.set_ylim([0,0.05])
+ax1.set_ylim([0,0.03])
 ax1.plot(X, data[1], label="Isolated", linewidth=1.5)
 ax1.plot(X, data[2], label="Dimers", linewidth=1.5)
 ax1.plot(X, data[3], label="Trimers", linewidth=1.5)
@@ -80,7 +80,7 @@ ax1.plot(X, [sum(by_ion_count[i][8:]) for i in range(len(X))], label="Octamers+"
 
 
 ax1.set_xlabel('Doping Concentration (x)')
-ax1.set_ylabel('Fraction of total ions')
+ax1.set_ylabel('Fraction of total structures')
 
 ax1.legend()
 
