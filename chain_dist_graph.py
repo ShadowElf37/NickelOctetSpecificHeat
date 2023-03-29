@@ -44,7 +44,7 @@ fig, (ax1) = plt.subplots(1,1)
 
 
 
-
+"""
 from scipy.ndimage.filters import gaussian_filter1d
 
 gaussian_filter1d = lambda x, sigma: x
@@ -59,6 +59,37 @@ ax1.plot(X, data[2], label="Dimers", linewidth=1.5)
 ax1.plot(X, data[3], label="Trimers", linewidth=1.5)
 ax1.plot(X, data[4], label="Tetramers", linewidth=1.5)
 #ax1.plot(X, data[4], label="Pentamers", linewidth=1.5)
+"""
+
+
+#fac8 =
+fac12 = 479001600
+
+exact_data1 = [0, 8, 192, 1536, 6720, 20160, 40320, 40320]
+exact_pct1 = [e/np.prod(range(8, 8-i-1,-1)) for i,e in enumerate(exact_data1)]
+#print(exact_pct)
+
+exact_data2 =[0, 0, 24, 1920, 40320, 463680, 3548160, 19514880,fac12/1/2/3,fac12/1/2,fac12/1,fac12]
+exact_data2p =[0,16,552,8448,84480,642240,3951360,19918080,fac12/1/2/3,fac12/1/2,fac12/1,fac12]
+exact_data1p =[0,8,288,5184,62400,552960,3749760,19716480,fac12/1/2/3,fac12/1/2,fac12/1,fac12]
+
+exact_pct2 = [e/np.prod(range(12, 12-i-1,-1)) for i,e in enumerate(exact_data2)]
+exact_pct2p = [e/np.prod(range(12, 12-i-1,-1)) for i,e in enumerate(exact_data2p)]
+exact_pct1p = [e/np.prod(range(12, 12-i-1,-1)) for i,e in enumerate(exact_data1p)]
+
+
+ax1.plot(np.array(list(range(1,9)))/8, exact_pct1, label="Exact Isolated+ (1)", linewidth=1.5)
+#ax1.plot(np.array(list(range(1,13)))/12, exact_pct2p, label="Exact Isolated+ (2)", linewidth=1.5)
+ax1.plot(np.array(list(range(1,13)))/12, exact_pct2, label="Exact Dimer+ (2)", linewidth=1.5)
+ax1.plot(np.array(list(range(1,13)))/12, exact_pct1p, label="Exact Isolated+ (2)", linewidth=1.5)
+
+
+#ax1.plot(X, [by_ion_count[i][0] for i in range(len(X))], label="Simulated Conducting", linewidth=1.5)
+ax1.plot(X, [sum(by_ion_count[i][1:]) for i in range(len(X))], label="Simulated Isolated+", linewidth=1.5)
+ax1.plot(X, [sum(by_ion_count[i][2:]) for i in range(len(X))], label="Simulated Dimers+", linewidth=1.5)
+
+
+
 
 ##ax1.plot(X, 2*X**2)
 """
