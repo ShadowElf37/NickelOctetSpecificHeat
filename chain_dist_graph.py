@@ -67,7 +67,7 @@ fac12 = 479001600
 
 exact_data1 = [0, 8, 192, 1536, 6720, 20160, 40320, 40320]
 exact_pct1 = [e/np.prod(range(8, 8-i-1,-1)) for i,e in enumerate(exact_data1)]
-#print(exact_pct)
+print(*exact_pct1, sep=' ')
 
 exact_data2 =[0, 0, 24, 1920, 40320, 463680, 3548160, 19514880,fac12/1/2/3,fac12/1/2,fac12/1,fac12]
 exact_data2p =[0,16,552,8448,84480,642240,3951360,19918080,fac12/1/2/3,fac12/1/2,fac12/1,fac12]
@@ -76,7 +76,8 @@ exact_data1p =[0,8,288,5184,62400,552960,3749760,19716480,fac12/1/2/3,fac12/1/2,
 exact_pct2 = [e/np.prod(range(12, 12-i-1,-1)) for i,e in enumerate(exact_data2)]
 exact_pct2p = [e/np.prod(range(12, 12-i-1,-1)) for i,e in enumerate(exact_data2p)]
 exact_pct1p = [e/np.prod(range(12, 12-i-1,-1)) for i,e in enumerate(exact_data1p)]
-
+print(*exact_pct1p, sep=' ')
+print(*exact_pct2, sep=' ')
 
 ax1.plot(np.array(list(range(1,9)))/8, exact_pct1, label="Exact Isolated+ (1)", linewidth=1.5)
 #ax1.plot(np.array(list(range(1,13)))/12, exact_pct2p, label="Exact Isolated+ (2)", linewidth=1.5)
