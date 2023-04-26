@@ -30,7 +30,7 @@ def walk_points(sample, points, points_to_check=((1,1,1),), n=0):
         if n > 0:
             new_points = new_without(points, p)
             isolated += walk_points(s, new_points, points_to_check, n=n-1)
-        elif any(map(isolated_checker(s), points_to_check)):
+        elif all(map(isolated_checker(s), points_to_check)):
             isolated += 1
     #print(isolated)
     return isolated
@@ -38,8 +38,8 @@ def walk_points(sample, points, points_to_check=((1,1,1),), n=0):
 #sample_1_table = [walk_points(s1, to_hit1, n=i) for i in range(0, 8)]
 #print(sample_1_table)
 print('[', end='')
-for i in range(0,8):
-    print(walk_points(s2, to_hit2, points_to_check=((1, 1, 1),), n=i), end=',')
+for i in range(0,9):
+    print(walk_points(s2, to_hit2, points_to_check=((1, 1, 1),(1, 2, 1),), n=i), end=',')
 print(']', end='')
 sample_2_table = []
 print(sample_2_table)
