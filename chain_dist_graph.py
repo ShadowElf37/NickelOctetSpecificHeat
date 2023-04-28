@@ -73,7 +73,7 @@ exact_data2 =[0, 0, 0, 24, 1920, 40320, 463680, 3548160, 19514880,fac12/1/2/3,fa
 exact_pct2 = [e/(np.prod(range(12, 12-i,-1) or 1)) for i,e in enumerate(exact_data2)]
 
 #exact_data2p =[0,16,552,8448,84480,642240,3951360,19918080,fac12/1/2/3,fac12/1/2,fac12/1,fac12]
-exact_data1p =[0,8,288,5184,62400,552960,3749760,19716480,fac12/1/2/3-4,fac12/1/2,fac12/1,fac12]
+exact_data1p =[0,0,8,288,5184,62400,552960,3749760,19716480,fac12/1/2/3-4,fac12/1/2,fac12/1,fac12]
 #exact_pct2p = [e/np.prod(range(12, 12-i-1,-1)) for i,e in enumerate(exact_data2p)]
 exact_pct1p = [e/np.prod(range(12, 12-i,-1)) for i,e in enumerate(exact_data1p)]
 
@@ -81,6 +81,9 @@ print(*exact_pct1, sep=' ')
 print(*exact_pct2, sep=' ')
 print(*exact_pct1p, sep=' ')
 print(*(np.array(exact_pct1p)**2), sep=' ')
+
+
+prob_of_2nd_given_1st = np.nan_to_num(np.array(exact_pct2) / np.array(exact_pct1p))
 
 #ax1.plot(np.array(list(range(1,9)))/8, exact_pct1, label="Exact Isolated+ (1)", linewidth=1.5)
 #ax1.plot(np.array(list(range(1,13)))/12, exact_pct2p, label="Exact Isolated+ (2)", linewidth=1.5)
@@ -92,8 +95,23 @@ print(*(np.array(exact_pct1p)**2), sep=' ')
 
 exact_isolated = sum(p*ncr(8, n)*np.power(X, n)*np.power(1-X, 8-n) for n,p in enumerate(exact_pct1))
 exact_dimer = sum(p*ncr(12, n)*np.power(X, n)*np.power(1-X, 12-n) for n,p in enumerate(exact_pct2))
-exact_isolated1 = sum(p*ncr(12, n)*np.power(X, n)*np.power(1-X, 12-n) for n,p in enumerate(exact_pct1p))
+exact_isolated1 = sum(p*ncr(12, n)*np.power(X, n)*np.power(1-X, 12-n) for n,p in enumerate(prob_of_2nd_given_1st))
 
+print(prob_of_2nd_given_1st)
+
+super_cool = (1-(1-prob_of_2nd_given_1st)**6)
+super_duper_cool = super_cool*np.array(exact_pct1p)
+
+print('$', super_duper_cool)
+
+super_cool_cont = sum(p*ncr(12, n)*np.power(X, n)*np.power(1-X, 12-n) for n,p in enumerate(super_cool))
+super_duper_cool_cont = sum(p*ncr(12, n)*np.power(X, n)*np.power(1-X, 12-n) for n,p in enumerate((super_duper_cool)))
+
+ATTEMPT = (1 - (1-np.array(exact_pct1)) ** 6) * np.array(exact_pct1)
+ATTEMPT_cont = sum(p*ncr(8, n)*np.power(X, n)*np.power(1-X, 8-n) for n,p in enumerate(ATTEMPT))
+print(ATTEMPT)
+
+DIST32 = [0.0,0.0,0.0,0.004838709677419355,0.02502780867630701,0.06451612903225806,0.11926390875222911]
 
 #ax1.plot(X, [by_ion_count[i][0] for i in range(len(X))], label="Simulated Conducting", linewidth=1.5)
 ax1.plot(X, [sum(by_ion_count[i][2:]) for i in range(len(X))], label="Simulated Dimers+", linewidth=1.5)
@@ -101,7 +119,10 @@ ax1.plot(X, [sum(by_ion_count[i][1:]) for i in range(len(X))], label="Simulated 
 
 ax1.plot(X, exact_dimer, label="Exact Dimer+", linewidth=1.5, linestyle='--')
 ax1.plot(X, exact_isolated, label="Exact Isolated+", linewidth=1.5, linestyle='--')
-#ax1.plot(X, exact_isolated1, label="Funny Isolated+", linewidth=1.5, linestyle='--')
+ax1.plot(X, exact_isolated1, label="Funny Dimer+", linewidth=1.5, linestyle='--')
+ax1.plot(X, super_cool_cont, label="Funny Cool Dimer+", linewidth=1.5, linestyle='--')
+ax1.plot(X, super_duper_cool_cont, label="Funny EPIC Dimer+", linewidth=1.5, linestyle='--')
+ax1.plot(X, ATTEMPT_cont, label="Funny SUPER Dimer+", linewidth=1.5, linestyle='--')
 
 
 
